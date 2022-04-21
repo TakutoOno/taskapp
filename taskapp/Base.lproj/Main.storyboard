@@ -16,8 +16,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <searchBar contentMode="redraw" id="uMd-bp-NOb">
+                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Hyr-bg-tfD">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="132" width="414" height="730"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="phs-2D-0uV" detailTextLabel="s23-DW-hiU" style="IBUITableViewCellStyleSubtitle" id="bsT-FV-Dkl">
@@ -50,10 +55,10 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Hyr-bg-tfD" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="HvB-UP-814"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Hyr-bg-tfD" secondAttribute="bottom" id="i2t-tp-8BV"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Hyr-bg-tfD" secondAttribute="trailing" id="mSr-WD-9pL"/>
-                            <constraint firstItem="Hyr-bg-tfD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="zTI-Xp-A7x"/>
+                            <constraint firstItem="Hyr-bg-tfD" firstAttribute="trailing" secondItem="uMd-bp-NOb" secondAttribute="trailing" id="9Mw-2k-AZE"/>
+                            <constraint firstItem="Hyr-bg-tfD" firstAttribute="leading" secondItem="uMd-bp-NOb" secondAttribute="leading" id="GNP-Lv-1jD"/>
+                            <constraint firstItem="Hyr-bg-tfD" firstAttribute="top" secondItem="uMd-bp-NOb" secondAttribute="bottom" id="ooV-QR-gZe"/>
+                            <constraint firstItem="Hyr-bg-tfD" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="xHa-6u-akH"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5ud-QN-6ej">
@@ -64,6 +69,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="search" destination="uMd-bp-NOb" id="vXI-Fg-x0K"/>
                         <outlet property="tableView" destination="Hyr-bg-tfD" id="xAC-sC-scu"/>
                         <segue destination="XvB-hz-USy" kind="show" identifier="cellSegue" id="bOv-b3-gC9"/>
                     </connections>
@@ -114,12 +120,25 @@
                                     <constraint firstAttribute="height" constant="120" id="8zc-S1-Z7C"/>
                                 </constraints>
                             </datePicker>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="カテゴリー" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Lo-Pu-Wes">
+                                <rect key="frame" x="10" y="464" width="394" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bm6-3H-yrz">
+                                <rect key="frame" x="10" y="495" width="394" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ccY-Xo-4ge"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="4N2-yN-Jv8" firstAttribute="top" secondItem="YnN-w4-o6C" secondAttribute="bottom" constant="10" id="1Th-gN-vUM"/>
                             <constraint firstItem="ccY-Xo-4ge" firstAttribute="trailing" secondItem="4N2-yN-Jv8" secondAttribute="trailing" constant="10" id="4Cn-Xf-0eT"/>
+                            <constraint firstItem="ccY-Xo-4ge" firstAttribute="trailing" secondItem="6Lo-Pu-Wes" secondAttribute="trailing" constant="10" id="8RA-xN-aoO"/>
+                            <constraint firstItem="6Lo-Pu-Wes" firstAttribute="top" secondItem="Ij6-mt-bvv" secondAttribute="bottom" constant="10" id="Ae2-Y9-xAA"/>
                             <constraint firstItem="ccY-Xo-4ge" firstAttribute="trailing" secondItem="19l-7c-gVK" secondAttribute="trailing" constant="10" id="Est-JC-Zxy"/>
                             <constraint firstItem="4N2-yN-Jv8" firstAttribute="leading" secondItem="ccY-Xo-4ge" secondAttribute="leading" constant="10" id="MS5-ey-kG8"/>
                             <constraint firstItem="19l-7c-gVK" firstAttribute="top" secondItem="4N2-yN-Jv8" secondAttribute="bottom" constant="10" id="Tqc-JE-8JV"/>
@@ -128,15 +147,20 @@
                             <constraint firstItem="Ij6-mt-bvv" firstAttribute="trailing" secondItem="ccY-Xo-4ge" secondAttribute="trailing" id="aXn-wB-LEU"/>
                             <constraint firstItem="Ij6-mt-bvv" firstAttribute="leading" secondItem="ccY-Xo-4ge" secondAttribute="leading" id="aae-aT-Aon"/>
                             <constraint firstItem="Ij6-mt-bvv" firstAttribute="top" secondItem="BJq-uF-umx" secondAttribute="bottom" constant="10" id="adS-Fz-Rxd"/>
+                            <constraint firstItem="bm6-3H-yrz" firstAttribute="leading" secondItem="ccY-Xo-4ge" secondAttribute="leading" constant="10" id="bGg-OT-Z71"/>
                             <constraint firstItem="BJq-uF-umx" firstAttribute="top" secondItem="19l-7c-gVK" secondAttribute="bottom" constant="10" id="bMj-LK-j1Q"/>
+                            <constraint firstItem="ccY-Xo-4ge" firstAttribute="trailing" secondItem="bm6-3H-yrz" secondAttribute="trailing" constant="10" id="dTU-Yl-BSX"/>
                             <constraint firstItem="ccY-Xo-4ge" firstAttribute="trailing" secondItem="YnN-w4-o6C" secondAttribute="trailing" constant="10" id="h22-Pf-aZy"/>
                             <constraint firstItem="YnN-w4-o6C" firstAttribute="leading" secondItem="ccY-Xo-4ge" secondAttribute="leading" constant="10" id="hJ9-pV-HWe"/>
                             <constraint firstItem="19l-7c-gVK" firstAttribute="leading" secondItem="ccY-Xo-4ge" secondAttribute="leading" constant="10" id="jmf-I7-Gc8"/>
+                            <constraint firstItem="bm6-3H-yrz" firstAttribute="top" secondItem="6Lo-Pu-Wes" secondAttribute="bottom" constant="10" id="mNa-3Q-nqU"/>
                             <constraint firstItem="YnN-w4-o6C" firstAttribute="top" secondItem="ccY-Xo-4ge" secondAttribute="top" constant="10" id="r1r-4p-z6o"/>
+                            <constraint firstItem="6Lo-Pu-Wes" firstAttribute="leading" secondItem="ccY-Xo-4ge" secondAttribute="leading" constant="10" id="uaI-Qg-Nlt"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2JG-a2-NYR"/>
                     <connections>
+                        <outlet property="categoryTextField" destination="bm6-3H-yrz" id="QqN-TX-9lw"/>
                         <outlet property="contentsTextView" destination="BJq-uF-umx" id="GGg-TZ-HuK"/>
                         <outlet property="datePicker" destination="Ij6-mt-bvv" id="Dtq-SJ-UYS"/>
                         <outlet property="titleTextField" destination="4N2-yN-Jv8" id="kEx-Gb-vdK"/>
