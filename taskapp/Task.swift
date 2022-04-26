@@ -17,14 +17,28 @@ class Task: Object {
     //内容
     @objc dynamic var contents = ""
     
+    //カテゴリー
+    @objc dynamic var kategoriInput: String = ""
+    
     //日時
     @objc dynamic var date = Date()
-    
-    //カテゴリー
-    @objc dynamic var category = ""
     
     // id　をプライマリーキーとして設定
     override static func primaryKey() -> String? {
         return "id"
+    }
+}
+
+class Category: Object {
+    
+    // 管理用 ID。プライマリーキー
+    @objc dynamic var ID = 0
+    
+    //カテゴリー
+    @objc dynamic var kategori = ""
+    
+    // ID　をプライマリーキーとして設定
+    override static func primaryKey() -> String? {
+        return "ID"
     }
 }

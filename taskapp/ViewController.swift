@@ -9,13 +9,22 @@ import UIKit
 import RealmSwift
 import UserNotifications
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var search: UISearchBar!
+    @IBOutlet weak var categorySearchTextField: UITextField!
     
     //Realmインスタンスを取得する
-    let realm = try! Realm()
+    var realm = try! Realm()
+    var category: Category!
+    
+    var pickerView: UIPickerView = UIPickerView()
+    
+    var categoryList = try! Realm().objects(Category.self).sorted(byKeyPath: "ID", ascending: true)
+    
+    var categoryListCount:Int = 0
+    var searchCategory = ["全てのカテゴリー"]
     
     // DB内のタスクが格納されるリスト。
     // 日付の近い順でソート：昇順
@@ -24,12 +33,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tapGesture)
+        
         // Do any additional setup after loading the view.
         tableView.fillerRowHeight = UITableView.automaticDimension
         tableView.delegate = self
         tableView.dataSource = self
         
         search.delegate = self
+        
+        categorySearchTextField.inputView = pickerView
+        
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        
+        
     }
     //検索機能　ーーーーーーーここからーーーーーーー
     func setupSearchBar(){
@@ -39,6 +60,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //  検索バーに入力があったら呼ばれる
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.categorySearchTextField.text = searchCategory[0]
         guard let searchText = search.text else {
             return
         }
@@ -47,7 +69,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             tableView.reloadData()
             return
         } else {
-            let predicate = NSPredicate(format: "category = %@", searchText)
+            let predicate = NSPredicate(format: "kategoriInput = %@", searchText)
             taskArray = realm.objects(Task.self).filter(predicate)
             
             tableView.reloadData()
@@ -74,10 +96,62 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    // UIPickerViewDataSource
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        // 表示する列数
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        // アイテム表示個数を返す
+        return searchCategory.count
+    }
+    
+    // UIPickerViewDelegate
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        // 表示する文字列を返す
+        return searchCategory[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
+        self.categorySearchTextField.text = searchCategory[row]
+        
+        guard let categoryText = categorySearchTextField.text else {
+            return
+        }
+        if categoryText == "" {
+            taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true)
+            search.text = categoryText
+            tableView.reloadData()
+        } else if categoryText == "全てのカテゴリー" {
+            taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true)
+            search.text = ""
+            tableView.reloadData()
+            
+        } else {
+            let predicate = NSPredicate(format: "kategoriInput = %@", categoryText)
+            search.text = categoryText
+            taskArray = realm.objects(Task.self).filter(predicate)
+            
+            tableView.reloadData()
+        }
+    }
+    
     //入力画面から戻ってきた時に TableView を更新させる
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+        
+        if categoryList.count != 0 {
+            self.searchCategory = ["全てのカテゴリー"]
+            categoryListCount = categoryList.count
+            for i in 0..<categoryListCount {
+                searchCategory.append(categoryList[i].kategori)
+            }
+        }
     }
     
     //データの数（＝セルの数）を返すメソッド
@@ -142,5 +216,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
+    @objc func dismissKeyboard() {
+        // キーボードを閉じる
+        view.endEditing(true)
+    }
 }
 

@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 import UserNotifications
 
-class InputViewController: UIViewController {
+class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     
     @IBOutlet weak var titleTextField: UITextField!
@@ -19,7 +19,12 @@ class InputViewController: UIViewController {
     
     let realm = try! Realm()
     var task: Task!
+    var category: Category!
     
+    //ピッカービュー
+    var pickerView: UIPickerView = UIPickerView()
+    
+    var categoryList = try! Realm().objects(Category.self).sorted(byKeyPath: "ID", ascending: true)
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -31,7 +36,36 @@ class InputViewController: UIViewController {
         titleTextField.text = task.title
         contentsTextView.text = task.contents
         datePicker.date = task.date
-        categoryTextField.text = task.category
+        categoryTextField.text = task.kategoriInput
+        
+        categoryTextField.inputView = pickerView
+        
+        // プロトコルの設定
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        
+        
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        pickerView.reloadAllComponents()
+    }
+    
+    //segueで画面遷移時に呼ばれる
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let categoryViewController: CategoryViewController = segue.destination as! CategoryViewController
+        
+        let category = Category()
+        
+        let allCategory = realm.objects(Category.self)
+        if allCategory.count != 0 {
+            category.ID = allCategory.max(ofProperty: "ID")! + 1
+        }
+        
+        categoryViewController.category = category
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -39,13 +73,36 @@ class InputViewController: UIViewController {
             self.task.title = self.titleTextField.text!
             self.task.contents = self.contentsTextView.text
             self.task.date = self.datePicker.date
+            self.task.kategoriInput = self.categoryTextField.text!
             self.realm.add(self.task, update: .modified)
-            self.task.category = self.categoryTextField.text!
         }
         
         setNotification(task: task)
         
         super.viewWillDisappear(animated)
+    }
+    
+    // UIPickerViewDataSource
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        // 表示する列数
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        // アイテム表示個数を返す
+        return categoryList.count
+    }
+    
+    // UIPickerViewDelegate
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        // 表示する文字列を返す
+        return categoryList[row].kategori
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        self.categoryTextField.text = categoryList[row].kategori
     }
     
     //タスクのローカル通知を登録する
@@ -93,15 +150,15 @@ class InputViewController: UIViewController {
         view.endEditing(true)
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
