@@ -18,7 +18,7 @@ class Task: Object {
     @objc dynamic var contents = ""
     
     //カテゴリー
-    @objc dynamic var kategoriInput: String = ""
+    @objc dynamic var category: Category?
     
     //日時
     @objc dynamic var date = Date()

@@ -21,6 +21,8 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     var task: Task!
     var category: Category!
     
+    var pickerRow: Int = 0
+    
     //ピッカービュー
     var pickerView: UIPickerView = UIPickerView()
     
@@ -36,20 +38,28 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         titleTextField.text = task.title
         contentsTextView.text = task.contents
         datePicker.date = task.date
-        categoryTextField.text = task.kategoriInput
-        
+        categoryTextField.text = task.category?.kategori
         categoryTextField.inputView = pickerView
         
         // プロトコルの設定
         pickerView.delegate = self
         pickerView.dataSource = self
         
+        let toolbar = UIToolbar()
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(InputViewController.tappedDone))
+        toolbar.items = [space, doneButton]
+        toolbar.sizeToFit()
+        categoryTextField.inputAccessoryView = toolbar
         
+
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        
         pickerView.reloadAllComponents()
     }
     
@@ -73,7 +83,7 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.task.title = self.titleTextField.text!
             self.task.contents = self.contentsTextView.text
             self.task.date = self.datePicker.date
-            self.task.kategoriInput = self.categoryTextField.text!
+            self.task.category = categoryList[pickerRow]
             self.realm.add(self.task, update: .modified)
         }
         
@@ -102,8 +112,16 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.categoryTextField.text = categoryList[row].kategori
+        pickerRow = row
     }
+    
+    @objc func tappedDone(){
+        categoryTextField.text = categoryList[pickerRow].kategori
+        categoryTextField.resignFirstResponder()
+
+    }
+    
+    
     
     //タスクのローカル通知を登録する
     func setNotification(task: Task) {

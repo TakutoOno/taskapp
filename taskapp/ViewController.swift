@@ -26,6 +26,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var categoryListCount:Int = 0
     var searchCategory = ["全てのカテゴリー"]
     
+    var pickerRow: Int = 0
+    var pickerInitialize = 0
+    
     // DB内のタスクが格納されるリスト。
     // 日付の近い順でソート：昇順
     //以降内容をアップデートするとリスト内は自動的に更新される
@@ -60,7 +63,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //  検索バーに入力があったら呼ばれる
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.categorySearchTextField.text = searchCategory[0]
+        self.categorySearchTextField.text = ""
         guard let searchText = search.text else {
             return
         }
@@ -69,7 +72,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             tableView.reloadData()
             return
         } else {
-            let predicate = NSPredicate(format: "kategoriInput = %@", searchText)
+            let predicate = NSPredicate(format: "category.kategori = %@", searchText)
             taskArray = realm.objects(Task.self).filter(predicate)
             
             tableView.reloadData()
@@ -116,7 +119,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
         self.categorySearchTextField.text = searchCategory[row]
         
         guard let categoryText = categorySearchTextField.text else {
@@ -132,10 +134,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             tableView.reloadData()
             
         } else {
-            let predicate = NSPredicate(format: "kategoriInput = %@", categoryText)
+            let predicate = NSPredicate(format: "category.kategori = %@", categoryText)
             search.text = categoryText
             taskArray = realm.objects(Task.self).filter(predicate)
-            
+        
             tableView.reloadData()
         }
     }
