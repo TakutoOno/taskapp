@@ -83,7 +83,9 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.task.title = self.titleTextField.text!
             self.task.contents = self.contentsTextView.text
             self.task.date = self.datePicker.date
+            if categoryTextField.text != "" {
             self.task.category = categoryList[pickerRow]
+            }
             self.realm.add(self.task, update: .modified)
         }
         
